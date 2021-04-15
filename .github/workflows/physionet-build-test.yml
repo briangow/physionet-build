@@ -64,16 +64,12 @@ jobs:
           mkdir geckodriver
           tar -xf geckodriver-v0.23.0-linux64.tar.gz -C geckodriver
           echo "$PWD/geckodriver" >> $GITHUB_PATH
-      - name: setup and test physionet 
+      - name: setup and test physionet, check amount of code tested
         run: |
           source env3/bin/activate
-          cd physionet-django
-          python manage.py makemigrations --dry-run --no-input --check
-          python manage.py resetdb
-          python manage.py loaddemo
-          python manage.py test --verbosity=3 --keepdb
-      - name: check the amount of code being tested and print/report the result
-        run: |
-          source env3/bin/activate
-          coverage run --source='.' manage.py test --keepdb
+          python physionet-django/manage.py makemigrations --dry-run --no-input --check
+          python physionet-django/manage.py resetdb
+          python physionet-django/manage.py loaddemo
+          python physionet-django/manage.py test --verbosity=3 --keepdb
+          coverage run --source='.' physionet-django/manage.py test --keepdb
           coverage report -m

@@ -28,6 +28,8 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: check user
+        run: whoami
       - name: checkout physionet-build repo
         uses: actions/checkout@v2
       - name: update packages

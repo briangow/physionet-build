@@ -38,9 +38,12 @@ jobs:
           apt-get install sudo python3-dev python3-pip build-essential postgresql zip wget python-virtualenv --yes
           ln -sT .env.example .env
       - name: install repo dependencies
+        # add virtual env path to github_path so each run: process will see it
         run: |
-          virtualenv -p python3.7 env3
-          source env3/bin/activate
+          export VIRTUAL_ENV=/env3
+          virtualenv -p python3.7 $VIRTUAL_ENV
+          echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+          source $VIRTUAL_ENV/bin/activate
           pip3 install -r requirements.txt
       - name: install libseccomp-dev for syscall filtering
         run: |
@@ -66,7 +69,6 @@ jobs:
           echo "$PWD/geckodriver" >> $GITHUB_PATH
       - name: setup and test physionet, check amount of code tested
         run: |
-          source env3/bin/activate
           python physionet-django/manage.py makemigrations --dry-run --no-input --check
           python physionet-django/manage.py resetdb
           python physionet-django/manage.py loaddemo

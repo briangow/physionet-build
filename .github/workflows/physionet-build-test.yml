@@ -14,6 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: debian:10
+      options: --user {{ secrets.DOCKER_USER }}
     services:
       postgres:
         image: postgres:11.9
@@ -31,6 +32,7 @@ jobs:
     steps:
       - name: add non-root user to docker
         run: |
+          useradd physionet_user
           export USER=physionet_user
           groupadd docker
           usermod -aG docker $USER

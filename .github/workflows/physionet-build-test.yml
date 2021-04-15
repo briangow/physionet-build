@@ -36,6 +36,7 @@ jobs:
           groupadd docker
           usermod -aG docker $USER
           newgrp docker
+          su - $USER
       - name: check user
         run: whoami
       - name: checkout physionet-build repo

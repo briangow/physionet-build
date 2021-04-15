@@ -68,13 +68,12 @@ jobs:
         run: |
           source env3/bin/activate
           cd physionet-django
-          DJANGO_DIR="$echo(pip show Django | grep 'Location:' | cut -d ' ' -f2)"
-          echo "$DJANGO_DIR" >> $GITHUB_PATH
           python manage.py makemigrations --dry-run --no-input --check
           python manage.py resetdb
           python manage.py loaddemo
           python manage.py test --verbosity=3 --keepdb
       - name: check the amount of code being tested and print/report the result
         run: |
+          source env3/bin/activate
           coverage run --source='.' manage.py test --keepdb
           coverage report -m

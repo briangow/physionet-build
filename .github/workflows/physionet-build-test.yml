@@ -14,7 +14,6 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: debian:10
-      options: --user {{ secrets.DOCKER_USER }}
     services:
       postgres:
         image: postgres:11.9

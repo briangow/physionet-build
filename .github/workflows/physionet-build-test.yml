@@ -66,10 +66,10 @@ jobs:
           echo "$PWD/geckodriver" >> $GITHUB_PATH
       - name: setup and test physionet 
         run: |
+          source env3/bin/activate
           cd physionet-django
           DJANGO_DIR="$echo(pip show Django | grep 'Location:' | cut -d ' ' -f2)"
           echo "$DJANGO_DIR" >> $GITHUB_PATH
-          source env3/bin/activate
           python manage.py makemigrations --dry-run --no-input --check
           python manage.py resetdb
           python manage.py loaddemo

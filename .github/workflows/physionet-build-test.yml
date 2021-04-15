@@ -10,11 +10,11 @@ on:
       - dev
 
 jobs:
-  # create a docker container running debian 10 (buster)
   container:
     runs-on: ubuntu-latest
     container: debian:10
-    # setup postgres
+    env:
+
     services:
       postgres:
         image: postgres:11.9
@@ -26,39 +26,51 @@ jobs:
           - 5432:5432
         # needed because the postgres container does not provide a healthcheck
         options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    defaults:
+      run:
+        shell: bash
     steps:
       - name: checkout physionet-build repo
         uses: actions/checkout@v2
-      - name: build and test physionet
-        # run steps below:
-        # update packages
-        # install and configure needed software
-        # install repo dependencies
-        # install libseccomp-dev for syscall filtering
-        # install and setup wfdb
-        # run linker for newly installed software
-        # install and setup lightwave
-        # install web driver - geckodriver
-        # setup and test physionet, check amount of code tested
+      - name: update packages
         run: |
           apt-get update --yes
+      - name: install and configure needed software
+        run: |
           apt-get install sudo python3-dev python3-pip build-essential postgresql zip wget python-virtualenv --yes
           ln -sT .env.example .env
-          virtualenv -p python3.7 env3
-          . env3/bin/activate
+      - name: install repo dependencies
+        # add virtual env path to path so each run: process will see it
+        run: |
+          export VIRTUAL_ENV=/env3
+          virtualenv -p python3.7 $VIRTUAL_ENV
+          echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+          source $VIRTUAL_ENV/bin/activate
           pip3 install -r requirements.txt
+      - name: install libseccomp-dev for syscall filtering
+        run: |
           apt-get install libseccomp-dev
+      - name: install and setup wfdb
+        run: |
           wget https://github.com/bemoody/wfdb/archive/10.6.2.tar.gz -O wfdb.tar.gz
           tar -xf wfdb.tar.gz
           (cd wfdb-* && ./configure --without-netfiles && make -C lib install && make -C data install)
+      - name: run linker for newly installed software
+        run: |
           ldconfig
+      - name: install and setup lightwave
+        run: |
           wget https://github.com/bemoody/lightwave/archive/bfe908a7f53434df61fd2444bf8c235e3e6226fc.tar.gz -O lightwave.tar.gz
           tar -xf lightwave.tar.gz
           (cd lightwave-* && make CGIDIR=/usr/local/bin sandboxed-server)
           wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
+      - name: install web driver - geckodriver
+        run: |
           mkdir geckodriver
           tar -xf geckodriver-v0.23.0-linux64.tar.gz -C geckodriver
           echo "$PWD/geckodriver" >> $GITHUB_PATH
+      - name: setup and test physionet, check amount of code tested
+        run: |
           python physionet-django/manage.py makemigrations --dry-run --no-input --check
           python physionet-django/manage.py resetdb
           python physionet-django/manage.py loaddemo

@@ -13,6 +13,7 @@ jobs:
   container:
     runs-on: ubuntu-latest
     container: debian:10
+      options: --user physionet_user
     services:
       postgres:
         image: postgres:11.9

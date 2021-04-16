@@ -17,6 +17,7 @@ jobs:
     defaults:
       run:
         shell: bash
+        working-directory: physionet-build
     steps:
       - name: update packages
         run: |
@@ -38,47 +39,37 @@ jobs:
           virtualenv -p python3.7 $VIRTUAL_ENV
           echo "$PN_REPO_DIR" >> $GITHUB_PATH
           echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
-          ls
-          cd $PN_REPO_DIR
-          ls
           source $VIRTUAL_ENV/bin/activate
           pip3 install -r requirements.txt
       - name: install libseccomp-dev for syscall filtering
         run: |
-          cd $PN_REPO_DIR
           apt-get install libseccomp-dev
       - name: setup postgres
         run: |
-          cd $PN_REPO_DIR
           service postgresql start
           sudo -u postgres psql -c "create user physionet with superuser password 'password';" -U postgres
           sudo -u postgres psql -c "create database physionet;" -U postgres
       - name: install and setup wfdb
         run: |
-          cd $PN_REPO_DIR
           wget https://github.com/bemoody/wfdb/archive/10.6.2.tar.gz -O wfdb.tar.gz
           tar -xf wfdb.tar.gz
           (cd wfdb-* && ./configure --without-netfiles && make -C lib install && make -C data install)
       - name: run linker for newly installed software
         run: |
-          cd $PN_REPO_DIR
           ldconfig
       - name: install and setup lightwave
         run: |
-          cd $PN_REPO_DIR
           wget https://github.com/bemoody/lightwave/archive/bfe908a7f53434df61fd2444bf8c235e3e6226fc.tar.gz -O lightwave.tar.gz
           tar -xf lightwave.tar.gz
           (cd lightwave-* && make CGIDIR=/usr/local/bin sandboxed-server)
           wget https://github.com/mozilla/geckodriver/releases/download/v0.23.0/geckodriver-v0.23.0-linux64.tar.gz
       - name: install web driver - geckodriver
         run: |
-          cd $PN_REPO_DIR
           mkdir geckodriver
           tar -xf geckodriver-v0.23.0-linux64.tar.gz -C geckodriver
           echo "$PWD/geckodriver" >> $GITHUB_PATH
       - name: setup and test physionet, check amount of code tested
         run: |
-          cd $PN_REPO_DIR
           python physionet-django/manage.py makemigrations --dry-run --no-input --check
           python physionet-django/manage.py resetdb
           python physionet-django/manage.py loaddemo

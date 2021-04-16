@@ -20,7 +20,7 @@ jobs:
       - name: user switch test
         run: |
           whoami
-          useradd physionet_user
+          useradd -m physionet_user
           su - physionet_user
           echo $USERNAME
           whoami

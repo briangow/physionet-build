@@ -29,7 +29,7 @@ jobs:
         run: |
           git clone https://github.com/MIT-LCP/physionet-build.git
       - name: ls
-        run: "ls -la $HOME"
+        run: ls -la $HOME
       - name: install repo dependencies
         # add virtual env path to github_path so each run: process will see it
         run: |

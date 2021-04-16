@@ -10,10 +10,8 @@ on:
       - dev
 
 jobs:
-  container:
+  pn-run:
     runs-on: ubuntu-latest
-    container:
-      image: debian:10
     services:
       postgres:
         image: postgres:11.9
@@ -29,9 +27,13 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: add non-root user to docker
+      - name: build docker with debian buster
+        uses: docker://debian:buster
+        with:
+          args: make
+      - name: create, add and switch user
         run: |
-          useradd physionet_user
+          adduser physionet_user
           export USER=physionet_user
           groupadd docker
           usermod -aG docker $USER

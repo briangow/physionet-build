@@ -21,7 +21,8 @@ jobs:
         run: |
           whoami
           useradd physionet_user
-          su physionet_user
+          su - physionet_user
+          echo $USERNAME
           whoami
       - name: update packages
         run: |

@@ -10,46 +10,16 @@ on:
       - dev
 
 jobs:
-  pn-run:
+  container:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:11.9
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: github_actions
-        ports:
-          - 5432:5432
-        # needed because the postgres container does not provide a healthcheck
-        options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+    container:
+      image: debian:10
     defaults:
       run:
         shell: bash
     steps:
-      - name: install build-essential / make
-        run: |
-          sudo apt-get update
-          sudo apt-get install build-essential
-
-      - uses: actions/checkout@v2
-
-      - uses: dbhi/qus/action@main
-
-      - name: build
-        uses: docker://debian:buster
-        with:
-          args: make
-      - name: create, add and switch user
-        run: |
-          adduser physionet_user
-          export USER=physionet_user
-          groupadd docker
-          usermod -aG docker $USER
-          newgrp docker
-          su - $USER
-      - name: check user
-        run: whoami
+      - name: checkout physionet-build repo
+        uses: actions/checkout@v2
       - name: update packages
         run: |
           apt-get update --yes
@@ -68,6 +38,10 @@ jobs:
       - name: install libseccomp-dev for syscall filtering
         run: |
           apt-get install libseccomp-dev
+      - name: setup postgres
+        run: |
+          sudo -u postgres psql -c "create user physionet with superuser password 'password';" -U postgres
+          sudo -u postgres psql -c "create database physionet;" -U postgres
       - name: install and setup wfdb
         run: |
           wget https://github.com/bemoody/wfdb/archive/10.6.2.tar.gz -O wfdb.tar.gz

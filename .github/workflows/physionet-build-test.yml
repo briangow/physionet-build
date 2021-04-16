@@ -19,6 +19,8 @@ jobs:
         shell: bash
         working-directory: physionet-build
     steps:
+      - name: mkdir physionet-build
+        run: mkdir physionet-build
       - name: clone physionet-build
         run: |
           git clone https://github.com/MIT-LCP/physionet-build.git

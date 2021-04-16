@@ -19,7 +19,7 @@ jobs:
     steps:
       - name: create an unprivileged user account
         run: |
-          /sbin/useradd pntestuser
+          useradd pntestuser
           chown pntestuser.pntestuser -R .
       - name: update packages
         run: |

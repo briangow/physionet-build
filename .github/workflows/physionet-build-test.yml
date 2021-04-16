@@ -14,10 +14,13 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: debian:10
+      options: --user 1001
     defaults:
       run:
         shell: bash
     steps:
+      - name: whoami
+        run: whoami
       - name: update packages
         run: |
           apt-get update --yes

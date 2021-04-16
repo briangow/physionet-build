@@ -11,6 +11,7 @@ on:
 
 jobs:
   sudo-job:
+    runs-on: ubuntu-latest
     steps:
       - name: update packages
         run: |

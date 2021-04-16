@@ -29,7 +29,7 @@ jobs:
     steps:
       - name: install make
         run: |
-          apt-get install build-essential
+          sudo apt-get install build-essential
       - name: build docker with debian buster
         uses: docker://debian:buster
         with:

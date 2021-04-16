@@ -21,9 +21,10 @@ jobs:
         run: |
           whoami
           useradd -l physionet_user
-          su physionet_user
+          su - physionet_user
           echo $USERNAME
           whoami
+          sudo -u physionet_user whoami
       - name: update packages
         run: |
           apt-get update --yes

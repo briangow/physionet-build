@@ -19,6 +19,9 @@ jobs:
         shell: bash
         working-directory: physionet-build
     steps:
+      - name: clone physionet-build
+        run: |
+          git clone https://github.com/MIT-LCP/physionet-build.git
       - name: update packages
         run: |
           apt-get update --yes
@@ -26,9 +29,6 @@ jobs:
         run: |
           apt-get install sudo git python3-dev python3-pip build-essential postgresql zip wget python-virtualenv --yes
           ln -sT .env.example .env
-      - name: clone physionet-build
-        run: |
-          git clone https://github.com/MIT-LCP/physionet-build.git
       - name: ls
         run: "ls -la $HOME"
       - name: install repo dependencies

@@ -31,6 +31,7 @@ jobs:
         run: |
           sudo apt-get install build-essential
       - name: build docker with debian buster
+        uses: dbhi/qus/action@master
         uses: docker://debian:buster
         with:
           args: make

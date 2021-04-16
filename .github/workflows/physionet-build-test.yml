@@ -19,8 +19,6 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: whoami
-        run: whoami
       - name: update packages
         run: |
           apt-get update --yes

@@ -17,12 +17,10 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: user switch test
+      - name: create an unprivileged user account
         run: |
-          whoami
-          useradd -m physionet_user
-          su -l physionet_user
-          whoami
+          /sbin/useradd pntestuser
+          chown pntestuser.pntestuser -R .
       - name: update packages
         run: |
           apt-get update --yes
@@ -76,7 +74,9 @@ jobs:
           tar -xf geckodriver-v0.23.0-linux64.tar.gz -C geckodriver
           echo "$PWD/geckodriver" >> $GITHUB_PATH
       - name: setup and test physionet, check amount of code tested
+        shell: sudo -u pntestuser bash -e {0}
         run: |
+          whoami
           python physionet-django/manage.py makemigrations --dry-run --no-input --check
           python physionet-django/manage.py resetdb
           python physionet-django/manage.py loaddemo

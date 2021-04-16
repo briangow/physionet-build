@@ -36,7 +36,9 @@ jobs:
           virtualenv -p python3.7 $VIRTUAL_ENV
           echo "$PN_REPO_DIR" >> $GITHUB_PATH
           echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
+          ls
           cd $PN_REPO_DIR
+          ls
           source $VIRTUAL_ENV/bin/activate
           pip3 install -r requirements.txt
       - name: install libseccomp-dev for syscall filtering

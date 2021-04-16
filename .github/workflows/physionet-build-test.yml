@@ -12,22 +12,22 @@ on:
 jobs:
   container:
     runs-on: ubuntu-latest
-    container:
-      image: debian:10
-      options: --user 1
+    container: debian:10
     defaults:
       run:
         shell: bash
     steps:
-      - name: update packages 2
+      - name: update packages
         run: |
-          su
           apt-get update --yes
       - name: install and configure needed software
         run: |
-          su
           apt-get install sudo git python3-dev python3-pip build-essential postgresql zip wget python-virtualenv --yes
           ln -sT .env.example .env
+      - name: user switch test
+          whoami
+          su 1001
+          whoami
       - name: clone physionet-build
         run: |
           git clone https://github.com/MIT-LCP/physionet-build.git

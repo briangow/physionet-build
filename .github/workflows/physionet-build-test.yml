@@ -20,8 +20,8 @@ jobs:
       - name: user switch test
         run: |
           whoami
-          useradd -m physionet_user
-          su - physionet_user
+          useradd -l physionet_user
+          su physionet_user
           echo $USERNAME
           whoami
       - name: update packages

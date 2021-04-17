@@ -31,6 +31,7 @@ jobs:
       - name: clone physionet-build
         run: |
           git clone https://github.com/MIT-LCP/physionet-build.git
+          ls -ltr
       - name: change user
         shell: sudo -u pntestuser bash -e {0}
         run: |

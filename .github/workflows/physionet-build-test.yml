@@ -44,7 +44,7 @@ jobs:
           echo "$PN_REPO_DIR" >> $GITHUB_PATH
           echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
           source $VIRTUAL_ENV/bin/activate
-          ls -la $PN_REPO_DIR
+          ls -la $GITHUB_WORKSPACE
           pip3 install -r requirements.txt
       - name: install libseccomp-dev for syscall filtering
         run: |

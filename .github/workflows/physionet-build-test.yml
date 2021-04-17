@@ -31,7 +31,6 @@ jobs:
       - name: clone physionet-build
         run: |
           git clone https://github.com/MIT-LCP/physionet-build.git
-          ls -ltr
       - name: change user
         shell: sudo -u pntestuser bash -e {0}
         run: |
@@ -45,6 +44,7 @@ jobs:
           echo "$PN_REPO_DIR" >> $GITHUB_PATH
           echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
           source $VIRTUAL_ENV/bin/activate
+          ls -la $PN_REPO_DIR
           pip3 install -r requirements.txt
       - name: install libseccomp-dev for syscall filtering
         run: |

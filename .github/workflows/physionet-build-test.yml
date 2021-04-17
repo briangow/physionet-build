@@ -72,7 +72,6 @@ jobs:
           tar -xf geckodriver-v0.23.0-linux64.tar.gz -C geckodriver
           echo "$PWD/geckodriver" >> $GITHUB_PATH
       - name: setup and test physionet, check amount of code tested
-        shell: sudo -u pntestuser bash -e {0}
         run: |
           whoami
           python physionet-django/manage.py makemigrations --dry-run --no-input --check

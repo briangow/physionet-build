@@ -30,6 +30,7 @@ jobs:
           ln -sT .env.example .env
       - name: clone physionet-build
         run: |
+          shell: sudo -u pntestuser bash -e {0}
           git clone https://github.com/MIT-LCP/physionet-build.git
       - name: change user
         shell: sudo -u pntestuser bash -e {0}
@@ -38,7 +39,7 @@ jobs:
       - name: install repo dependencies
         # add virtual env path to github_path so each run: process will see it
         run: |
-          export PN_REPO_DIR=/physionet-build
+          export PN_REPO_DIR=$GITHUB_WORKSPACE/physionet-build
           export VIRTUAL_ENV=$PN_REPO_DIR/env3
           virtualenv -p python3.7 $VIRTUAL_ENV
           echo "$PN_REPO_DIR" >> $GITHUB_PATH

@@ -29,8 +29,8 @@ jobs:
           apt-get install sudo git python3-dev python3-pip build-essential postgresql zip wget python-virtualenv --yes
           ln -sT .env.example .env
       - name: clone physionet-build
+        shell: sudo -u pntestuser bash -e {0}
         run: |
-          shell: sudo -u pntestuser bash -e {0}
           git clone https://github.com/MIT-LCP/physionet-build.git
       - name: change user
         shell: sudo -u pntestuser bash -e {0}

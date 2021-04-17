@@ -17,6 +17,8 @@ jobs:
       run:
         shell: bash
     steps:
+      - name: checkout physionet-build repo
+        uses: actions/checkout@v2
       - name: create an unprivileged user account
         run: |
           useradd pntestuser
@@ -32,11 +34,6 @@ jobs:
         shell: sudo -u pntestuser bash -e {0}
         run: |
           whoami
-      - name: clone physionet-build
-        run: |
-          git clone https://github.com/MIT-LCP/physionet-build.git
-      - name: ls
-        run: ls -la $HOME
       - name: install repo dependencies
         # add virtual env path to github_path so each run: process will see it
         run: |

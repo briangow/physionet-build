@@ -17,10 +17,8 @@ jobs:
       run:
         shell: bash
     steps:
-      - name: create an unprivileged user account
-        run: |
-          useradd pntestuser
-          chown pntestuser.pntestuser -R .
+      - name: checkout physionet-build repo
+        uses: actions/checkout@v2
       - name: update packages
         run: |
           apt-get update --yes
@@ -28,24 +26,13 @@ jobs:
         run: |
           apt-get install sudo git python3-dev python3-pip build-essential postgresql zip wget python-virtualenv --yes
           ln -sT .env.example .env
-      - name: clone physionet-build
-        shell: sudo -u pntestuser bash -e {0}
-        run: |
-          git clone https://github.com/MIT-LCP/physionet-build.git
-      - name: change user
-        shell: sudo -u pntestuser bash -e {0}
-        run: |
-          whoami
       - name: install repo dependencies
         # add virtual env path to github_path so each run: process will see it
         run: |
-          export PN_REPO_DIR=$GITHUB_WORKSPACE/physionet-build
           export VIRTUAL_ENV=$PN_REPO_DIR/env3
           virtualenv -p python3.7 $VIRTUAL_ENV
-          echo "$PN_REPO_DIR" >> $GITHUB_PATH
           echo "$VIRTUAL_ENV/bin" >> $GITHUB_PATH
           source $VIRTUAL_ENV/bin/activate
-          ls -la $GITHUB_WORKSPACE
           pip3 install -r requirements.txt
       - name: install libseccomp-dev for syscall filtering
         run: |
@@ -76,7 +63,6 @@ jobs:
           echo "$PWD/geckodriver" >> $GITHUB_PATH
       - name: setup and test physionet, check amount of code tested
         run: |
-          whoami
           python physionet-django/manage.py makemigrations --dry-run --no-input --check
           python physionet-django/manage.py resetdb
           python physionet-django/manage.py loaddemo

@@ -66,6 +66,7 @@ jobs:
       - name: setup and test physionet, check amount of code tested
         run: |
           cd physionet-django
+          echo "Django settings = ${{DJANGO_SETTINGS_MODULE}}"
           python manage.py makemigrations --dry-run --no-input --check
           python manage.py resetdb
           python manage.py loaddemo

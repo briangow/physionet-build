@@ -13,6 +13,8 @@ jobs:
   container:
     runs-on: ubuntu-latest
     container: debian:10
+    env:
+      DJANGO_SETTINGS_MODULE: physionet.settings.development.pgsql
     defaults:
       run:
         shell: bash

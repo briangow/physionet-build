@@ -42,11 +42,10 @@ jobs:
       - name: setup postgres
         run: |
           service postgresql start
-          sudo -u postgres psql -c "create user physionet with superuser password 'password';" -U postgres
           sudo -u postgres psql -c "create database physionet;" -U postgres
       - name: install and setup wfdb
         run: |
-          wget https://github.com/bemoody/wfdb/archive/10.6.2.tar.gz -O wfdb.tar.gz
+          wget https://github.com/bemoody/wfdb/archive/master.tar.gz -O wfdb.tar.gz
           tar -xf wfdb.tar.gz
           (cd wfdb-* && ./configure --without-netfiles && make -C lib install && make -C data install)
       - name: run linker for newly installed software
@@ -66,7 +65,6 @@ jobs:
       - name: setup and test physionet, check amount of code tested
         run: |
           cd physionet-django
-          echo "Django settings = $DJANGO_SETTINGS_MODULE"
           python manage.py makemigrations --dry-run --no-input --check
           python manage.py resetdb
           python manage.py loaddemo
